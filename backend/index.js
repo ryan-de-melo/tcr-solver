@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const { parseEquations, solveCRT } = require('./tcrSolver');
+const path = require('path');
 
 const app = express();
 app.use(cors());
@@ -21,10 +22,8 @@ app.post('/solve', (req, res) => {
 
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
 
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const { parseEquations, solveCRT } = require('./tcrSolver');
+
+
 
 
 
@@ -49,5 +48,4 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-//const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
