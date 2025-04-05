@@ -1,0 +1,22 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 20px;
+  background: #f5f5f5;
+}
+textarea {
+  width: 100%;
+  font-family: monospace;
+  padding: 10px;
+  font-size: 1em;
+}
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  font-size: 1em;
+}
+#output {
+  margin-top: 20px;
+  background: #fff;
+  padding: 15px;
+  border-radius: 5px;
+}
