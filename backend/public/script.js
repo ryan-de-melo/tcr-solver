@@ -4,7 +4,7 @@ async function solve() {
   output.innerHTML = 'Resolvendo...';
 
   try {
-    const res = await fetch('https://tcr-solver.onrender.com', {
+    const res = await fetch('/solve', { // Chamada relativa
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ input }),
