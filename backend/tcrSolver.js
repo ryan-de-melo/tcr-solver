@@ -19,6 +19,11 @@ function parseEquations(input) {
   const parsed = [];
 
   for (let line of lines) {
+    const congruencias = line.match(/≡/g);
+    if (congruencias && congruencias.length > 1) {
+      throw new Error(`Mais de uma congruência na mesma linha: "${line}"`);
+    }
+    
     const regex = /(?:(\d*)x)?\s*≡\s*(-?\d+)\s*\(?(?:mod)?\s*(\d+)\)?/i;
     const match = line.match(regex);
     if (!match) throw new Error(`Formato inválido: ${line}`);
