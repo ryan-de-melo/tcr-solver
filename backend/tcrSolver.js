@@ -1,20 +1,23 @@
-function gcd(a, b) {
-  return b === 0 ? a : gcd(b, a % b);
+function mdc(a, b) {
+  return b === 0 ? a : mdc(b, a % b);
 }
 
 function extendedEuclidean(a, b) {
-  if (b === 0) return { gcd: a, x: 1, y: 0 };
-  const { gcd, x: x1, y: y1 } = extendedEuclidean(b, a % b);
-  return { gcd, x: y1, y: x1 - Math.floor(a / b) * y1 };
+  if (b === 0) return { mdc: a, x: 1, y: 0 };
+  const { mdc, x: x1, y: y1 } = extendedEuclidean(b, a % b);
+  return { mdc, x: y1, y: x1 - Math.floor(a / b) * y1 };
 }
 
 function modInverse(a, m) {
-  const { gcd, x } = extendedEuclidean(a, m);
-  if (gcd !== 1) return null;
+  const { mdc, x } = extendedEuclidean(a, m);
+  if (mdc !== 1) return null;
   return ((x % m) + m) % m;
 }
 
 function parseEquations(input) {
+  // Substitui todos os "=" por "≡"
+  input = input.replace(/=/g, '≡');
+
   const lines = input.split("\n").map(line => line.trim()).filter(l => l);
   const parsed = [];
 
@@ -33,14 +36,17 @@ function parseEquations(input) {
     b = parseInt(b);
     m = parseInt(m);
 
+    if (m <= 0) throw new Error(`O módulo deve ser positivo: ${m}`);
+
     const inv = modInverse(a, m);
-    if (inv === null) throw new Error(`Não há inverso de ${a} módulo ${m}, sistema impossível.`);
+    if (inv === null) throw new Error(`Não há inverso de ${a} módulo ${m}. Isso ocorre quando mdc(${a}, ${m}) ≠ 1.`);
     
-    parsed.push({ a, b, m, reduced: (inv * b) % m });
+    parsed.push({ a, b, m, reduced: ((inv * b) % m + m) % m });
   }
 
   return parsed;
 }
+
 
 function solveCRT(equations) {
   const steps = [];
@@ -49,7 +55,7 @@ function solveCRT(equations) {
 
   for (let i = 0; i < mods.length; i++) {
     for (let j = i + 1; j < mods.length; j++) {
-      if (gcd(mods[i], mods[j]) !== 1) {
+      if (mdc(mods[i], mods[j]) !== 1) {
         throw new Error(`Os módulos ${mods[i]} e ${mods[j]} não são primos entre si.`);
       }
     }
@@ -65,7 +71,7 @@ function solveCRT(equations) {
     const Mi = M / mi;
     const inv = modInverse(Mi, mi);
 
-    steps.push(`M${i + 1} = M / m${i + 1} = ${Mi}`);
+    steps.push(`M${i + 1} = ${M} / ${mi} = ${Mi}`);
     steps.push(`Inverso de ${Mi} mod ${mi} = ${inv}`);
 
     x += ai * Mi * inv;
@@ -74,7 +80,9 @@ function solveCRT(equations) {
   const result = ((x % M) + M) % M;
   steps.push(`Resultado final: x ≡ ${result} mod ${M}`);
 
-  return { result, M, steps };
+  const latexResult = `x \\equiv ${result} \\pmod{${M}}`;
+
+  return { result, M, steps, latexResult };
 }
 
 module.exports = {
