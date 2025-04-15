@@ -1,22 +1,186 @@
+/* Importa fonte moderna */
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code&family=Roboto:wght@400;700&display=swap');
+
+/* Base */
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Roboto', sans-serif;
   margin: 20px;
-  background: #f5f5f5;
+  background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  transition: background-color 0.3s, color 0.3s;
 }
+
+/* Botão de tema (canto superior esquerdo fixo) */
+#toggle-theme {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  background-color: #ffffffcc;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  transition: background-color 0.3s, transform 0.2s;
+}
+#toggle-theme:hover {
+  background-color: #eeeeee;
+  transform: scale(1.05);
+}
+body.dark #toggle-theme {
+  background-color: #2a2a2a;
+  color: #f5f5f5;
+}
+body.dark #toggle-theme:hover {
+  background-color: #444;
+}
+
+/* Título */
+h1 {
+  color: #f0f0f0;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 700;
+}
+body.dark h1 {
+  color: #f0f0f0;
+}
+
+/* Área de texto */
 textarea {
   width: 100%;
-  font-family: monospace;
-  padding: 10px;
+  max-width: 600px;
+  height: 140px;
+  font-family: 'Fira Code', monospace;
+  padding: 12px;
   font-size: 1em;
+  border-radius: 10px;
+  border: 1px solid #bbb;
+  box-shadow: 2px 4px 10px rgba(0,0,0,0.05);
+  resize: vertical;
+  background-color: #ffffffdd;
+  transition: background-color 0.3s, color 0.3s;
 }
-button {
+body.dark textarea {
+  background-color: #2b2b2b;
+  color: #f5f5f5;
+  border-color: #444;
+}
+
+/* Botão de resolver */
+button:not(#toggle-theme) {
   margin-top: 10px;
-  padding: 10px 20px;
+  padding: 10px 24px;
   font-size: 1em;
+  background-color: #0d47a1; /* azul escuro moderno */
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
 }
+button:not(#toggle-theme):hover {
+  background-color: #1565c0; /* tom de azul mais claro para hover */
+  transform: translateY(-2px);
+}
+body.dark button:not(#toggle-theme) {
+  background-color: #0a244f;
+}
+body.dark button:not(#toggle-theme):hover {
+  background-color: #0c3474;
+}
+
+/* Área de saída */
 #output {
   margin-top: 20px;
-  background: #fff;
-  padding: 15px;
-  border-radius: 5px;
+  background: #ffffff;
+  padding: 20px 30px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  max-width: 700px;
+  width: 100%;
+  transition: background-color 0.3s, color 0.3s;
+}
+body.dark #output {
+  background-color: #2b2b2b;
+  color: #f5f5f5;
+  border-color: #444;
+}
+
+/* Passos do algoritmo */
+.output-steps p {
+  margin: 6px 0;
+  font-family: 'Fira Code', monospace;
+  font-size: 1.05rem;
+  color: #333;
+}
+body.dark .output-steps p {
+  color: #ddd;
+}
+
+/* Resultado final */
+.output-final {
+  margin-top: 15px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  font-family: 'Fira Code', monospace;
+  color: #2975b3;
+}
+body.dark .output-final {
+  color: #2975b3;
+}
+
+/* Tema Claro (default) */
+body.light {
+  background: 
+    url('https://www.transparenttextures.com/patterns/graphy.png'),
+    linear-gradient(135deg, #90caf9, #0d47a1);
+  background-blend-mode: overlay;
+  background-attachment: fixed;
+  background-size: cover;
+  color: #333;
+}
+
+/* Tema Escuro */
+body.dark {
+  background: linear-gradient(135deg, #121212, #1e1e1e);
+  color: #f0f0f0;
+}
+
+/* Texto de "Resolvendo..." animado */
+#resolvendo-text {
+  font-family: 'Fira Code', monospace;
+  font-weight: bold;
+  color: #2975b3;
+  font-size: 1.05rem;
+}
+
+.dots::after {
+  content: '';
+  display: inline-block;
+  width: 1ch;
+  animation: dotty 1.2s steps(4, end) infinite;
+}
+
+@keyframes dotty {
+  0%   { content: ''; }
+  25%  { content: '.'; }
+  50%  { content: '..'; }
+  75%  { content: '...'; }
+  100% { content: ''; }
+}
+
+body.dark #resolvendo-text {
+  color: #2975b3;
+}
+
+#output:empty {
+  display: none;
 }

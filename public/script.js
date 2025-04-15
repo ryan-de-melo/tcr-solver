@@ -1,24 +1,65 @@
 async function solve() {
-  const input = document.getElementById('input').value;
+  const input = document.getElementById('input').value.trim();
   const output = document.getElementById('output');
-  output.innerHTML = 'Resolvendo...';
+  output.innerHTML = `
+    <div class="output-steps">
+      <p id="resolvendo-text">Resolvendo<span class="dots"></span></p>
+    </div>
+  `;
+
+  const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+  const fetchStart = Date.now();
 
   try {
-    const res = await fetch('/solve', { // Chamada relativa
+    const res = await fetch('/solve', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ input }),
     });
 
     const data = await res.json();
+    const elapsed = Date.now() - fetchStart;
+
+    // Aguarda o tempo restante para completar 1.5 segundos
+    if (elapsed < 1500) {
+      await wait(1500 - elapsed);
+    }
 
     if (res.ok) {
-      output.innerHTML = data.steps.map(s => `<p>${s}</p>`).join('');
-      output.innerHTML += `<hr><strong>Solução: x ≡ ${data.result} mod ${data.M}</strong>`;
+      // Gerando os passos
+      output.innerHTML = `
+        <div class="output-steps">
+          ${data.steps.map(s => `<p>${s}</p>`).join('')}
+        </div>
+        <hr>
+        <div class="output-final">
+          <strong>Solução:</strong> 
+          <span style="font-size: 1.3rem;">
+            x ≡ <strong>${data.result}</strong> mod ${data.M}
+          </span>
+        </div>
+      `;
     } else {
       output.innerHTML = `<p style="color:red;">Erro: ${data.error}</p>`;
     }
   } catch (err) {
     output.innerHTML = `<p style="color:red;">Erro na requisição</p>`;
   }
+
+  // Fazendo scroll até o final da resposta
+  output.scrollIntoView({ behavior: 'smooth' });
 }
+
+// Alternância de tema
+const toggleBtn = document.getElementById('toggle-theme');
+toggleBtn.addEventListener('click', () => {
+  document.body.classList.toggle('light');
+  document.body.classList.toggle('dark');
+
+  // Altera o ícone do botão
+  if (document.body.classList.contains('dark')) {
+    toggleBtn.textContent = '☀️';
+  } else {
+    toggleBtn.textContent = '🌙';
+  }
+});

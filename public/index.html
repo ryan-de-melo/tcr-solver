@@ -5,15 +5,15 @@
   <title>Solver de Congruências</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="light">
+  <button id="toggle-theme">🌙</button>
   <h1>Solver de Congruências com TCR</h1>
   <textarea 
-  id="input" 
-  placeholder="Exemplo de entrada:
+    id="input" 
+    placeholder="Exemplo de entrada:
 2x ≡ 3 mod 7
  x ≡ 1 mod 5"
- style="width: 100%; height: 100px; font-family: monospace; font-size: 1rem;"
- ></textarea>
+  ></textarea>
   <button onclick="solve()">Resolver</button>
   <div id="output"></div>
   <script src="script.js"></script>
