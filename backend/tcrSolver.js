@@ -83,8 +83,8 @@ function parseEquations(input) {
 
 function solveCRT(equations) {
   const steps = [];
-  steps.push(`Resolução:`); // Adicionado no topo
-  
+  steps.push(`\\text{Resolução:}`);
+
   const mods = equations.map(eq => eq.m);
   const reduced = equations.map(eq => eq.reduced);
 
@@ -99,7 +99,7 @@ function solveCRT(equations) {
   }
 
   const M = mods.reduce((acc, m) => acc * m, 1);
-  steps.push(`Produto dos módulos (M): ${M}`);
+  steps.push(`\\text{Produto dos módulos:}\\quad M = ${mods.join(' \\cdot ')} = ${M}`);
 
   let x = 0;
   let termosFormula = [];
@@ -110,22 +110,23 @@ function solveCRT(equations) {
     const Mi = M / mi;
     const inv = modInverse(Mi, mi);
 
-    steps.push(`M${i + 1} = ${M} / ${mi} = ${Mi}`);
-    steps.push(`Inverso de ${Mi} mod ${mi} = ${inv}`);
+    steps.push(`M_{${i + 1}} = \\frac{${M}}{${mi}} = ${Mi}`);
+    steps.push(`y_{${i + 1}} = ${inv} \\quad \\text{(inverso de } ${Mi} \\mod ${mi})`);
 
     x += ai * Mi * inv;
-    termosFormula.push(`(${ai} · ${Mi} · ${inv})`);
+    termosFormula.push(`(${ai} \\cdot ${Mi} \\cdot ${inv})`);
   }
 
   steps.push(`x = ${termosFormula.join(' + ')}`);
-
   const result = ((x % M) + M) % M;
-  steps.push(`Resultado final: x ≡ ${x} ≡ ${result} mod ${M}`);
+  steps.push(`x \\equiv ${x} \\equiv ${result} \\pmod{${M}}`);
 
-  const latexResult = `x \\equiv ${result} \\pmod{${M}}`;
+  const latexSteps = `\\[\n\\begin{aligned}\n${steps.join(' \\\\\n')}\n\\end{aligned}\n\\]`;
+  const latexResult = `\\(x \\equiv \\boxed{${result}} \\pmod{${M}}\\)`;
 
-  return { result, M, steps, latexResult };
+  return { result, M, steps: latexSteps, latexResult };
 }
+
 
 module.exports = {
   parseEquations,

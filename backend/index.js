@@ -9,6 +9,18 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json());
 
+// Rota para gerar o arquivo LaTeX
+app.post('/latex', (req, res) => {
+  try {
+    const nomeArquivo = gerarLatex(); // Gera o saida.tex
+    const url = `/${nomeArquivo}`;    // Link acessível via /public
+    res.json({ url });
+  } catch (err) {
+    console.error('Erro ao gerar LaTeX:', err);
+    res.status(500).json({ error: 'Erro ao gerar LaTeX' });
+  }
+});
+
 // Servir arquivos estáticos (HTML, CSS, JS) da pasta public (um nível acima)
 app.use(express.static(path.join(__dirname, '..', 'public')));
 

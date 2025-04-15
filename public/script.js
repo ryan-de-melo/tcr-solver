@@ -28,17 +28,23 @@ async function solve() {
     if (res.ok) {
       // Gerando os passos
       output.innerHTML = `
-        <div class="output-steps">
-          ${data.steps.map(s => `<p>${s}</p>`).join('')}
-        </div>
-        <hr>
-        <div class="output-final">
-          <strong>Solução:</strong> 
-          <span style="font-size: 1.3rem;">
-            x ≡ <strong>${data.result}</strong> mod ${data.M}
-          </span>
-        </div>
-      `;
+      <div class="output-steps">
+      ${data.steps} <!-- já é um bloco LaTeX completo -->
+      </div>
+      <hr>
+      <div class="output-final">
+        <strong>Solução:</strong> 
+        <span style="font-size: 1.3rem;">
+          ${data.latexResult}
+        </span>
+      </div>
+    `;
+    
+    // Dispara renderização do MathJax
+    if (window.MathJax) {
+      MathJax.typesetPromise();
+    }
+
     } else {
       output.innerHTML = `<p style="color:red;">Erro: ${data.error}</p>`;
     }

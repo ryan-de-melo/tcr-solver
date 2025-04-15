@@ -116,6 +116,20 @@ body.dark #output {
   border-color: #444;
 }
 
+.output-steps {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: white;
+  border-radius: 1rem;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: left;
+  border: 1px solid #ccc;
+}
+body.dark .output-steps {
+  background: #2b2b2b;
+}
+
 /* Passos do algoritmo */
 .output-steps p {
   margin: 6px 0;
@@ -130,7 +144,8 @@ body.dark .output-steps p {
 /* Resultado final */
 .output-final {
   margin-top: 15px;
-  font-size: 1.25rem;
+  text-align: center;
+  font-size: 1.3rem;
   font-weight: bold;
   font-family: 'Fira Code', monospace;
   color: #2975b3;
