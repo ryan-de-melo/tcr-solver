@@ -8,7 +8,9 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+
+// Servir arquivos estáticos (HTML, CSS, JS) da pasta public (um nível acima)
+app.use(express.static(path.join(__dirname, '..', 'public')));
 
 // Rota para resolver as equações
 app.post('/solve', (req, res) => {
@@ -25,8 +27,8 @@ app.post('/solve', (req, res) => {
 
 // Rota padrão para carregar o index.html
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
 });
 
 // Inicia o servidor
-app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
+app.listen(PORT, () => console.log(`Servidor rodando em http://localhost:${PORT}`));
