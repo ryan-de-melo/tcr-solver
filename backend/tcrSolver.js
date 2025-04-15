@@ -88,6 +88,16 @@ function solveCRT(equations) {
   const mods = equations.map(eq => eq.m);
   const reduced = equations.map(eq => eq.reduced);
 
+  for (let i = 0; i < equations.length; i++) {
+    for (let j = i + 1; j < equations.length; j++) {
+      const m1 = equations[i].m;
+      const m2 = equations[j].m;
+      if (mdc(m1, m2) !== 1) {
+        throw new Error(`Os módulos ${mods[i]} e ${mods[j]} não são primos entre si.`);
+      }
+    }
+  }
+
   const M = mods.reduce((acc, m) => acc * m, 1);
   steps.push(`Produto dos módulos (M): ${M}`);
 

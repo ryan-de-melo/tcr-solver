@@ -55,7 +55,8 @@ body.dark h1 {
 textarea {
   width: 100%;
   max-width: 600px;
-  height: 140px;
+  min-height: 120px;
+  max-height: 300px;
   font-family: 'Fira Code', monospace;
   padding: 12px;
   font-size: 1em;
@@ -63,6 +64,7 @@ textarea {
   border: 1px solid #bbb;
   box-shadow: 2px 4px 10px rgba(0,0,0,0.05);
   resize: vertical;
+  overflow-y: auto;
   background-color: #ffffffdd;
   transition: background-color 0.3s, color 0.3s;
 }

@@ -63,3 +63,23 @@ toggleBtn.addEventListener('click', () => {
     toggleBtn.textContent = '🌙';
   }
 });
+
+// Autoajuste do textarea ao digitar
+const textarea = document.getElementById('input');
+
+function autoResizeTextarea(el) {
+  el.style.height = 'auto';
+
+  // Garante altura mínima
+  const newHeight = Math.max(el.scrollHeight, 120);
+  el.style.height = Math.min(newHeight, 300) + 'px';
+}
+
+textarea.addEventListener('input', function () {
+  autoResizeTextarea(this);
+});
+
+// Garante altura mínima inicial mesmo se vazio
+window.addEventListener('DOMContentLoaded', () => {
+  autoResizeTextarea(textarea);
+});
