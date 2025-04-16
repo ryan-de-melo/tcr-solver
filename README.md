@@ -3,6 +3,8 @@
 O TCR Solver é um sistema web para resolver sistemas de congruências lineares, fazendo uso do Teorema Chinês do Resto (TCR). Feito para estudantes de exatas, especialmente de computação, que precisam de um meio rápido e eficaz de resolver sistemas de congruências. O intuito do TCR Solver é que estudantes
 o usem como forma de corrigir suas atividades relacionadas a congruências.
 
+O TCR Solver foi um projeto elaborado para a disciplina *Fundamentos de Matemática para a Ciência da Computação II* do curso de *Ciência da Computação* na *UFCG*.
+
 ## Sistemas de congruências
 
 Um sistema de congruência é do tipo:
