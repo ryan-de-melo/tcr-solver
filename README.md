@@ -7,11 +7,9 @@ o usem como forma de corrigir suas atividades relacionadas a congruências.
 
 Um sistema de congruência é do tipo:
 
-$$
-x \equiv 2 \pmod{3} \\
-x \equiv 3 \pmod{5} \\
-x \equiv 2 \pmod{7}
-$$
+- x ≡ 2 mod 3  
+- x ≡ 3 mod 5  
+- x ≡ 2 mod 7
 
 ## Teorema Chinês do Resto (TCR)
 
