@@ -7,8 +7,8 @@ try {
   const solution = solveCRT(parsed);
 
   console.log('\n=== Passos ===');
-  console.log(solution.steps.join('\n'));
-  console.log(`\nSolução final: x ≡ ${solution.result} mod ${solution.M}`);
+  console.log(solution.steps); // steps já está em string formatada em LaTeX
+  console.log(`\nSolução final: ${solution.latexResult}`);
 } catch (err) {
   console.error('Erro:', err.message);
 }

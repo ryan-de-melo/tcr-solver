@@ -156,18 +156,17 @@ body.dark .output-final {
 
 /* Tema Claro (default) */
 body.light {
-  background: 
-    url('https://www.transparenttextures.com/patterns/graphy.png'),
-    linear-gradient(135deg, #90caf9, #0d47a1);
-  background-blend-mode: overlay;
-  background-attachment: fixed;
-  background-size: cover;
+  background: linear-gradient(-45deg, #90caf9, #6a7f8d, #64b5f6, #0d47a1);
+  background-size: 400% 400%;
+  animation: animatedBackground 10s ease infinite;
   color: #333;
 }
 
 /* Tema Escuro */
 body.dark {
-  background: linear-gradient(135deg, #121212, #1e1e1e);
+  background: linear-gradient(-45deg, #1f1f1f, #2d2d2d, #151515, #3a3a3a);
+  background-size: 400% 400%;
+  animation: animatedBackground 15s ease infinite;
   color: #f0f0f0;
 }
 
@@ -200,4 +199,10 @@ body.dark #resolvendo-text {
 
 #output:empty {
   display: none;
+}
+
+@keyframes animatedBackground {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

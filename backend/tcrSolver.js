@@ -1,147 +1,188 @@
 function mdc(a, b) {
-  return b === 0 ? a : mdc(b, a % b);
-}
-
-function extendedEuclidean(a, b) {
-  if (b === 0) return { mdc: a, x: 1, y: 0 };
-  const { mdc, x: x1, y: y1 } = extendedEuclidean(b, a % b);
-  return { mdc, x: y1, y: x1 - Math.floor(a / b) * y1 };
-}
-
-function modInverse(a, m) {
-  const { mdc, x } = extendedEuclidean(a, m);
-  if (mdc !== 1) return null;
-  return ((x % m) + m) % m;
-}
-
-function parseEquations(input) {
-  // Substitui todos os "=" por "≡"
-  input = input.replace(/=/g, '≡');
-
-  const lines = input.split("\n").map(line => line.trim()).filter(l => l);
-  const parsed = [];
-
-  for (let line of lines) {
-    const congruencias = line.match(/≡/g);
-    if (congruencias && congruencias.length > 1) {
-      throw new Error(`Mais de uma congruência na mesma linha: "${line}"`);
-    }
-    
-    const regex = /(?:(\d*)x)?\s*≡\s*(-?\d+)\s*\(?(?:mod)?\s*(\d+)\)?/i;
-    const match = line.match(regex);
-    if (!match) throw new Error(`Formato inválido: ${line}`);
-
-    let [, a, b, m] = match;
-    a = parseInt(a || "1");
-    b = parseInt(b);
-    m = parseInt(m);
-
-    if (m <= 0) throw new Error(`O módulo deve ser positivo: ${m}`);
-
-    const inv = modInverse(a, m);
-    if (inv === null) throw new Error(`Não há inverso de ${a} módulo ${m}. Isso ocorre quando mdc(${a}, ${m}) ≠ 1.`);
-    
-    parsed.push({ a, b, m, reduced: ((inv * b) % m + m) % m });
+  if (b === 0) {
+    return a;
   }
 
-  return parsed;
+  let resto = a % b;
+  return mdc(b, resto);
 }
 
 
-function parseEquations(input) {
-  // Substitui todos os "=" por "≡"
-  input = input.replace(/=/g, '≡');
+function euclidesEstendido(a, b) {
+  if (b === 0) {
+    return { mdc: a, x: 1, y: 0 };
+  }
+  
+  let resto = a % b;
+  let resultado = euclidesEstendido(b, resto);
 
-  const lines = input.split("\n").map(line => line.trim()).filter(l => l);
-  const parsed = [];
+  let mdc = resultado.mdc;
+  let x1 = resultado.x;
+  let y1 = resultado.y;
 
-  for (let line of lines) {
-    const congruencias = line.match(/≡/g);
-    if (congruencias && congruencias.length > 1) {
-      throw new Error(`Mais de uma congruência na mesma linha: "${line}"`);
-    }
-    
-    const regex = /(?:(\d*)x)?\s*≡\s*(-?\d+)\s*\(?(?:mod)?\s*(\d+)\)?/i;
-    const match = line.match(regex);
-    if (!match) throw new Error(`Formato inválido: ${line}`);
+  let x = y1;
+  let y = x1 - Math.floor(a / b) * y1;
 
-    let [, a, b, m] = match;
-    a = parseInt(a || "1");
-    b = parseInt(b);
-    m = parseInt(m);
+  return { mdc: mdc, x: x, y: y };
+}
 
-    if (m <= 0) throw new Error(`O módulo deve ser positivo: ${m}`);
 
-    const inv = modInverse(a, m);
-    if (inv === null) throw new Error(`Não há inverso de ${a} módulo ${m}. Isso ocorre quando mdc(${a}, ${m}) ≠ 1.`);
-    
-    parsed.push({ a, b, m, reduced: ((inv * b) % m + m) % m });
+function inversoModular(a, m) {
+  let resultado = euclidesEstendido(a, m);
+  let mdc = resultado.mdc;
+  let x = resultado.x;
+
+  if (mdc !== 1) {
+    return null; // Não existe inverso modular se o MDC não for 1
   }
 
-  return parsed;
+  let inverso = (x % m + m) % m;
+  return inverso;
 }
 
-function solveCRT(equations) {
-  const steps = [];
-  steps.push(`\\text{Resolução:}`);
 
-  const mods = equations.map(eq => eq.m);
-  const reduced = equations.map(eq => eq.reduced);
+function analisarEquacoes(entrada) {
+  const passosCanonicos = [];
 
-  for (let i = 0; i < equations.length; i++) {
-    for (let j = i + 1; j < equations.length; j++) {
-      const m1 = equations[i].m;
-      const m2 = equations[j].m;
+  // Troca todos os "=" por "≡"
+  entrada = entrada.replace(/=/g, '≡');
+
+  // Quebra a entrada por linhas, remove espaços e linhas vazias
+  const linhas = entrada.split("\n").map(linha => linha.trim()).filter(l => l);
+
+  const resultadoFinal = [];
+
+  for (let linha of linhas) {
+    // Verifica se tem mais de um símbolo de congruência
+    let quantosSimbolos = linha.match(/≡/g);
+    if (quantosSimbolos && quantosSimbolos.length > 1) {
+      throw new Error(`Mais de uma congruência na mesma linha: "${linha}"`);
+    }
+
+    // Expressão regular para extrair coeficiente, constante e módulo
+    let padrao = /(?:(\d*)x)?\s*≡\s*(-?\d+)\s*\(?(?:mod)?\s*(\d+)\)?/i;
+    let partes = linha.match(padrao);
+
+    if (!partes) {
+      throw new Error(`Formato inválido: ${linha}`);
+    }
+
+    let coeficiente = parseInt(partes[1] || "1"); // se não tiver número antes do x, é 1
+    let constante = parseInt(partes[2]);
+    let modulo = parseInt(partes[3]);
+
+    if (modulo <= 0) {
+      throw new Error(`O módulo deve ser positivo: ${modulo}`);
+    }
+
+    let inverso = inversoModular(coeficiente, modulo);
+    if (inverso === null) {
+      throw new Error(`Não há inverso de ${coeficiente} módulo ${modulo}. Isso ocorre quando mdc(${coeficiente}, ${modulo}) ≠ 1.`);
+    }
+
+    let reduzido = (inverso * constante) % modulo;
+    if (reduzido < 0) {
+      reduzido += modulo;
+    }
+
+    // Adiciona passo a passo em LaTeX
+    passosCanonicos.push(`
+      \\text{Dada: } ${coeficiente === 1 ? '' : coeficiente}x \\equiv ${constante} \\mod ${modulo} \\\\
+      \\text{Inverso de } ${coeficiente} \\mod ${modulo} = ${inverso} \\\\
+      x \\equiv (${inverso} \\cdot ${constante}) \\mod ${modulo} = ${reduzido} \\mod ${modulo} \\\\
+      x \\equiv ${reduzido} \\mod ${modulo}
+    `);
+
+    resultadoFinal.push({
+      a: coeficiente,
+      b: constante,
+      m: modulo,
+      reduced: reduzido
+    });
+  }
+
+  return {
+    parsed: resultadoFinal,
+    canonicalSteps: passosCanonicos
+  };
+}
+
+
+
+function solveTCR(equacoes) {
+  const passos = [];
+
+  // Mostra o sistema já na forma canônica
+  const congruenciasCanonicas = equacoes.map(eq =>
+    `x \\equiv ${eq.reduced} \\mod ${eq.m}`
+  );
+
+  passos.push("\\text{Sistema no formato canônico:}");
+  congruenciasCanonicas.forEach(eq => passos.push(eq));
+  passos.push("\\text{Resolução:}");
+
+  // Extrai os módulos (m) e os valores reduzidos (a)
+  const modulos = equacoes.map(eq => eq.m);
+  const restos = equacoes.map(eq => eq.reduced);
+
+  // Verifica se os módulos são coprimos entre si
+  for (let i = 0; i < modulos.length; i++) {
+    for (let j = i + 1; j < modulos.length; j++) {
+      const m1 = modulos[i];
+      const m2 = modulos[j];
       if (mdc(m1, m2) !== 1) {
-        throw new Error(`Os módulos ${mods[i]} e ${mods[j]} não são primos entre si.`);
+        throw new Error(`Os módulos ${m1} e ${m2} não são primos entre si.`);
       }
     }
   }
 
-  const M = mods.reduce((acc, m) => acc * m, 1);
-  steps.push(`\\text{Produto dos módulos (M): } ${M}`);
+  // Calcula o produto total dos módulos (M)
+  const M = modulos.reduce((acc, m) => acc * m, 1);
+  passos.push(`\\text{Produto dos módulos (M): } ${M}`);
 
-  let x = 0;
-  let termosFormula = [];
+  let resultadoParcial = 0;
+  let partesDaFormula = [];
 
-  for (let i = 0; i < reduced.length; i++) {
-    const mi = mods[i];
-    const ai = reduced[i];
+  for (let i = 0; i < restos.length; i++) {
+    const mi = modulos[i];
+    const ai = restos[i];
     const Mi = M / mi;
-    const inv = modInverse(Mi, mi);
+    const inverso = inversoModular(Mi, mi);
 
-    steps.push(`M_{${i + 1}} = \\frac{${M}}{${mi}} = ${Mi}`);
-    steps.push(`\\text{Inverso de } ${Mi} \\mod ${mi} = ${inv}`);
+    passos.push(`M_{${i + 1}} = \\frac{${M}}{${mi}} = ${Mi}`);
+    passos.push(`\\text{Inverso de } ${Mi} \\mod ${mi} = ${inverso}`);
 
-    // Adicionando a parte x = M1*d1*m1 + ...
-    termosFormula.push(`${ai} \\cdot ${Mi} \\cdot ${inv}`);
-    
-    x += ai * Mi * inv;
+    partesDaFormula.push(`${ai} \\cdot ${Mi} \\cdot ${inverso}`);
+    resultadoParcial += ai * Mi * inverso;
   }
 
-  // Exibindo a expressão completa de x
-  const formulaExp = termosFormula.join(" + ");
-  steps.push(`\\text{x = } ${formulaExp}`);
+  // Mostra a expressão final para x antes do módulo
+  const expressaoFinal = partesDaFormula.join(" + ");
+  passos.push(`\\text{x = } ${expressaoFinal}`);
 
-  steps.push(`\\text{Resultado final: } x \\equiv ${x} \\equiv ${((x % M) + M) % M} \\mod ${M}`);
-  const result = ((x % M) + M) % M;
+  const resultadoFinal = ((resultadoParcial % M) + M) % M;
+  passos.push(`\\text{Resultado final: } x \\equiv ${resultadoParcial} \\equiv ${resultadoFinal} \\mod ${M}`);
 
-  // Formatação final em LaTeX (array alinhado à esquerda)
-  const latexSteps = `
+  // Monta o LaTeX com todos os passos
+  const latexComPassos = `
 \\[
 \\begin{array}{l}
-${steps.join(' \\\\')}
+${passos.join(" \\\\")}
 \\end{array}
 \\]
 `.trim();
 
-  // Agora, exibindo a solução final sem duplicação da palavra "Solução"
-  const latexResult = `\\boxed{${result}} \\mod ${M}`;
+  const caixaResultado = `x \\equiv \\boxed{${resultadoFinal}} \\pmod{${M}}`;
 
-  return { result, M, steps: latexSteps, latexResult };
+  return {
+    result: resultadoFinal,
+    M: M,
+    steps: latexComPassos,
+    latexResult: caixaResultado
+  };
 }
 
 module.exports = {
-  parseEquations,
-  solveCRT,
+  analisarEquacoes,
+  solveTCR,
 };
