@@ -29,9 +29,15 @@ calculados m1, m2, etc. referentes a cada expressão, após isso é calculado o 
 - **Backend:** Node.js (Express)
 - **Lógica matemática:** Implementação manual (sem uso de LLMs)
 
+## Acesse o site
+
+Para acessar a página web do TCR Solver entre no link a seguir:
+
+[TCR Solver](https://tcr-solver.onrender.com)
+
 ## Como rodar localmente
 
-É necessário ter o Node.js instalado na sua máquina.
+É necessário ter o Node.js e seu gerenciador de pacotes instalado na sua máquina.
 
 1. Clone o repositório:
     ```bash
@@ -43,3 +49,4 @@ calculados m1, m2, etc. referentes a cada expressão, após isso é calculado o 
     ```
 3. Acessar a página:
     Acesse em seu navegador a página http://localhost:3000
+    ou na que sua máquina indicar pelo terminal.
