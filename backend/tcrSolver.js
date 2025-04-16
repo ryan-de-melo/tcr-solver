@@ -99,7 +99,7 @@ function solveCRT(equations) {
   }
 
   const M = mods.reduce((acc, m) => acc * m, 1);
-  steps.push(`\\text{Produto dos módulos:}\\quad M = ${mods.join(' \\cdot ')} = ${M}`);
+  steps.push(`\\text{Produto dos módulos (M): } ${M}`);
 
   let x = 0;
   let termosFormula = [];
@@ -111,22 +111,35 @@ function solveCRT(equations) {
     const inv = modInverse(Mi, mi);
 
     steps.push(`M_{${i + 1}} = \\frac{${M}}{${mi}} = ${Mi}`);
-    steps.push(`y_{${i + 1}} = ${inv} \\quad \\text{(inverso de } ${Mi} \\mod ${mi})`);
+    steps.push(`\\text{Inverso de } ${Mi} \\mod ${mi} = ${inv}`);
 
+    // Adicionando a parte x = M1*d1*m1 + ...
+    termosFormula.push(`${ai} \\cdot ${Mi} \\cdot ${inv}`);
+    
     x += ai * Mi * inv;
-    termosFormula.push(`(${ai} \\cdot ${Mi} \\cdot ${inv})`);
   }
 
-  steps.push(`x = ${termosFormula.join(' + ')}`);
-  const result = ((x % M) + M) % M;
-  steps.push(`x \\equiv ${x} \\equiv ${result} \\pmod{${M}}`);
+  // Exibindo a expressão completa de x
+  const formulaExp = termosFormula.join(" + ");
+  steps.push(`\\text{x = } ${formulaExp}`);
 
-  const latexSteps = `\\[\n\\begin{aligned}\n${steps.join(' \\\\\n')}\n\\end{aligned}\n\\]`;
-  const latexResult = `\\(x \\equiv \\boxed{${result}} \\pmod{${M}}\\)`;
+  steps.push(`\\text{Resultado final: } x \\equiv ${x} \\equiv ${((x % M) + M) % M} \\mod ${M}`);
+  const result = ((x % M) + M) % M;
+
+  // Formatação final em LaTeX (array alinhado à esquerda)
+  const latexSteps = `
+\\[
+\\begin{array}{l}
+${steps.join(' \\\\')}
+\\end{array}
+\\]
+`.trim();
+
+  // Agora, exibindo a solução final sem duplicação da palavra "Solução"
+  const latexResult = `\\boxed{${result}} \\mod ${M}`;
 
   return { result, M, steps: latexSteps, latexResult };
 }
-
 
 module.exports = {
   parseEquations,
