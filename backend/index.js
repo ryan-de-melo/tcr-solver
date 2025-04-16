@@ -27,11 +27,35 @@ app.use(express.static(path.join(__dirname, '..', 'public')));
 // Rota para resolver as equações
 app.post('/solve', (req, res) => {
   try {
+
     const { input } = req.body;
     console.log('Recebido:', input);
-    const parsed = parseEquations(input);
-    const solution = solveCRT(parsed);
-    res.json(solution);
+
+    //const parsed = parseEquations(input);
+    //const solution = solveCRT(parsed);
+
+    const { parsed, canonicalSteps } = parseEquations(input); // <-- altera aqui
+    const { result, M, steps, latexResult } = solveCRT(parsed);
+
+    // Extraindo só o conteúdo dentro do array do steps final
+    const stepsInner = steps
+    .replace(/\\\[|\\\]/g, '')                              // remove \[ \]
+    .replace(/\\begin\{array\}\{l\}|\\end\{array\}/g, '');  // remove begin/end array
+
+    const fullSteps = `
+\\[
+\\begin{array}{l}
+\\text{Transformando para forma canônica:} \\\\
+${canonicalSteps.join(' \\\\')}
+\\\\ \\hline \\\\
+${stepsInner}
+\\end{array}
+\\]
+`.trim();
+
+
+    res.json({ steps: fullSteps, latexResult, result, M });
+
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
