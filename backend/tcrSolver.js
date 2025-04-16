@@ -172,7 +172,7 @@ ${passos.join(" \\\\")}
 \\]
 `.trim();
 
-  const caixaResultado = `x \\equiv \\boxed{${resultadoFinal}} \\pmod{${M}}`;
+  const caixaResultado = `\\boxed{${resultadoFinal}} \\mod ${M}`;
 
   return {
     result: resultadoFinal,
