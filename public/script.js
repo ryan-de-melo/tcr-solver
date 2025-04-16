@@ -35,7 +35,7 @@ async function solve() {
       <div class="output-final">
         <strong>Solução:</strong> 
         <span style="font-size: 1.3rem;">
-          \\(${data.latexResult}\\)
+          \\(x \\equiv ${data.latexResult}\\)
         </span>
       </div>
     `;

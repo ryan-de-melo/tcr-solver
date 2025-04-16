@@ -83,6 +83,15 @@ function parseEquations(input) {
 
 function solveCRT(equations) {
   const steps = [];
+
+  // Bota na forma canônica
+  const canonicalCongruences = equations.map(eq => 
+    `x \\equiv ${eq.reduced} \\mod ${eq.m}`
+  );
+  steps.push("\\text{Sistema no formato canônico:}");
+  canonicalCongruences.forEach(c => steps.push(c));
+
+
   steps.push(`\\text{Resolução:}`);
 
   const mods = equations.map(eq => eq.m);
